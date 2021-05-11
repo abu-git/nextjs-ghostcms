@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import styles from '../styles/Home.module.scss'
 
-const BLOG_URL = 'https://ghost-with-next.herokuapp.com/'
-const CONTENT_API_KEY = 'bc8d03d5aabcbde211c0c426d4'
+const {BLOG_URL, CONTENT_API_KEY} = process.env
+
 
 type Post = {
   title: string
@@ -24,7 +24,7 @@ export const getStaticProps = async ({ params }) => {
   }
 }
 
-const Home: React.FC<{ posts: Post[]}> = (props) => {
+const Home: React.FC<{ posts: Post[] }> = (props) => {
   const { posts } = props
 
   return (
@@ -32,7 +32,7 @@ const Home: React.FC<{ posts: Post[]}> = (props) => {
       <h1>Blog</h1>
       <ul>
         {posts.map((post) =>{
-          return <li key={post.slug}>
+          return <li className={styles.postitem} key={post.slug}>
             <Link href="/post/[slug]" as={`/post/${post.slug}`}>
               <a>{post.title}</a>
             </Link>

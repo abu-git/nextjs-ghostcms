@@ -3,9 +3,19 @@
   padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   height: 100vh;
+}
+
+.postitem {
+	padding: 10px 0;
+}
+
+.goback {
+	text-align: left;
+	align-self: self-start;
+	cursor: pointer;
 }
 
 .main {
