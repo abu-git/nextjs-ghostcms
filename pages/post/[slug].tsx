@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styles from '../../styles/Home.module.scss'
+import { useState } from 'react'
 
 const {BLOG_URL, CONTENT_API_KEY} = process.env
 
@@ -41,8 +42,34 @@ const Post: React.FC<{post: Post}> = (props) => {
 
     const { post } = props
 
+    const [enableLoadComments, setEnableLoadComments] = useState<boolean>(true)
+
     if(router.isFallback){
         return <h3>...loading</h3>
+    }
+
+
+    // will load disqus
+    function loadComments(){
+        setEnableLoadComments(false)
+        //disqus config
+        ;(window as any).disqus_config = function () {
+            this.page.url = window.location.href;  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = post.slug; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        }
+
+        const script = document.createElement('script')
+        script.src = 'https://ghostcms-nextjs-vbcutzi4if.disqus.com/embed.js'
+        script.setAttribute('data-timestamp', Date.now().toString())
+        document.body.appendChild(script)
+
+        //(function() { // ORIGINAL DISQUS CODE EDITED AS ABOVE
+        //    var d = document, s = d.createElement('script');
+        //    s.src = 'https://ghostcms-nextjs-vbcutzi4if.disqus.com/embed.js';
+        //    s.setAttribute('data-timestamp', +new Date());
+        //    (d.head || d.body).appendChild(s);
+        //})();
+
     }
 
     return <div className={styles.container}>
@@ -53,7 +80,15 @@ const Post: React.FC<{post: Post}> = (props) => {
             </p>
             <h1>{post.title}</h1>
 
-            <div dangerouslySetInnerHTML={{ __html: post.html }}></div>   
+            <div dangerouslySetInnerHTML={{ __html: post.html }}></div>
+
+            {enableLoadComments && (
+                <p className={styles.goback} onClick={loadComments}>
+                Load Comments
+                </p>)
+            }
+
+            <div id="disqus_thread"></div>   
         </div>
 }
 
